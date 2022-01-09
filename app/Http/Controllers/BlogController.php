@@ -106,19 +106,19 @@ class BlogController extends Controller
     {
         $blog = Blog::findOrFail($id); // to find the record of id =$id  if not found return throw error
 
-        if ($request->photo) {
+        if ($request->photo) { // if new photo comes
             //save in folder
             $path = 'img'; // upload path
             $file_extension = $request->photo->getClientOriginalExtension();
             $file_name = date('YmdHis') . "." . $file_extension;
             $request->photo->move($path, $file_name);
 
-            // remove photo
+            // remove old photo bu using it name in database and search by path and remove
 
             $file_path = public_path('/img/'.$blog->photo);
             unlink($file_path);
 
-            $blog->update([
+            $blog->update([  // change the name in database
                 'photo' => $file_name
             ]);
         }
@@ -144,8 +144,9 @@ class BlogController extends Controller
         $b = Blog::findOrFail($blog);
 
         // dd($blog); //send  one $blog was choiced
+        //remove from database
         Blog::destroy($blog);
-
+// remove from folder
         $file_path = public_path('/img/'.$b->photo);
         unlink($file_path);
 

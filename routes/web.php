@@ -14,6 +14,7 @@ use PHPUnit\TextUI\XmlConfiguration\Group;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::resource('home','BlogController');
 Route::get('/blog/{blog}','BlogController@show');
 Route::resource('catagory','CatagoryController');
