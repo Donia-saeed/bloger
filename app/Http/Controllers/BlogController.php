@@ -16,7 +16,7 @@ class BlogController extends Controller
      */
     public function index()
     {
-        $blogs = Blog::with('Catagory')->get(); //you must  use relationship
+        $blogs = Blog::with('Catagory')->latest()->get(); //you must  use relationship//latest to show the new add
         return view('home', ['blogs' => $blogs]);
     }
 
@@ -29,7 +29,7 @@ class BlogController extends Controller
     {
 
         $catagories = Catagory::all();
-        return view('create-blogByDonia',['catagories' => $catagories]);   // selection catagories
+        return view('create-blogByDonia', ['catagories' => $catagories]);   // selection catagories
     }
 
     /**
@@ -41,16 +41,18 @@ class BlogController extends Controller
     public function store(Request $request)
     {
 
-// save in folder
+        // save in folder
         $path = 'img'; // upload path
         $file_extension = $request->photo->getClientOriginalExtension();
-        $file_name = date('YmdHis'). "." . $file_extension;
+        $file_name = date('YmdHis') . "." . $file_extension;
         $request->photo->move($path, $file_name);
         // storing in database as file name use it in blade by path
-        Blog::create(['photo'=>$file_name,
-                      'name'=>$request->name,
-                      'body'=>$request->body,
-                      'catagory_id'=>$request->catagory_id]);
+        Blog::create([
+            'photo' => $file_name,
+            'name' => $request->name,
+            'body' => $request->body,
+            'catagory_id' => $request->catagory_id
+        ]);
 
         // Blog::create($request->except('_token'));
         return redirect('home');
@@ -69,8 +71,7 @@ class BlogController extends Controller
         // $blog = Blog::find($blog);
         // dd($blog);
         $catagory = Catagory::find($blog->catagory_id);  //can write id only because we done relation
-        return view('blog', ['blog' => $blog,'catagory' => $catagory]);
-
+        return view('blog', ['blog' => $blog, 'catagory' => $catagory]);
     }
 
     /**
@@ -79,14 +80,13 @@ class BlogController extends Controller
      * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function edit( $blog)
+    public function edit($blog)
     {
         //dd($blog)=$blog->id  so i put $blog
         $catagories = Catagory::all();
         $blog = Blog::find($blog);
         // dd($blog);=all content of one blog
-        return view('edit-blog', ['catagories' => $catagories],['blog' => $blog]);
-
+        return view('edit-blog', ['catagories' => $catagories], ['blog' => $blog]);
     }
 
     /**
@@ -103,28 +103,34 @@ class BlogController extends Controller
     // }
     public function update(Request $request, $id)
     // new data
-    {    $blog= Blog::findOrFail($id); // to find the record of id =$id  if not found return throw error
+    {
+        $blog = Blog::findOrFail($id); // to find the record of id =$id  if not found return throw error
 
-        //save in folder
-    $path = 'img'; // upload path
-    $file_extension = $request->photo->getClientOriginalExtension();
-    $file_name = date('YmdHis'). "." . $file_extension;
-    $request->photo->move($path, $file_name);
+        if ($request->photo) {
+            //save in folder
+            $path = 'img'; // upload path
+            $file_extension = $request->photo->getClientOriginalExtension();
+            $file_name = date('YmdHis') . "." . $file_extension;
+            $request->photo->move($path, $file_name);
 
-// remove photo
-if (file_exists(public_path($name =  $request->photo->getClientOriginalName())))
-{
-    unlink(public_path($name));
-};
+            // remove photo
 
-    // updating in database as file name use it in blade and use path of folder
-    $blog->update(['photo'=>$file_name,
-                  'name'=>$request->name,
-                  'body'=>$request->body,
-                  'catagory_id'=>$request->catagory_id]);
+            $file_path = public_path('/img/'.$blog->photo);
+            unlink($file_path);
 
-    return redirect('home');
+            $blog->update([
+                'photo' => $file_name
+            ]);
+        }
 
+        // updating in database as file name use it in blade and use path of folder
+        $blog->update([
+            'name' => $request->name,
+            'body' => $request->body,
+            'catagory_id' => $request->catagory_id
+        ]);
+
+        return redirect('home');
     }
 
     /**
@@ -133,10 +139,15 @@ if (file_exists(public_path($name =  $request->photo->getClientOriginalName())))
      * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function destroy( $blog)
+    public function destroy($blog)
     {
-        // dd($blog); send  one $blog was choiced
+        $b = Blog::findOrFail($blog);
+
+        // dd($blog); //send  one $blog was choiced
         Blog::destroy($blog);
+
+        $file_path = public_path('/img/'.$b->photo);
+        unlink($file_path);
 
         return redirect('home');
     }

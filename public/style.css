@@ -1982,6 +1982,8 @@ ul.shortcode-archive li {
 .page-template-template-portfolio .grid .entry-thumbnail img {
 	width:100%;
 	transition:all 0.4s;
+	height: 170px;
+	border: 1px solid #d5d2d2;
 }
 .page-template-template-portfolio .grid .entry-thumbnail img:hover {
 	opacity:0.8;

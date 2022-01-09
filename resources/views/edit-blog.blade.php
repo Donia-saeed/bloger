@@ -10,7 +10,7 @@
             @method('PUT')
             @csrf
             <div class="form">
-                <p><input type="file" name="photo" required value="{{$blog->photo}}"></p>
+                <p><input type="file" name="photo" value="{{$blog->photo}}"></p>
                 <p><input type="text" name="name"  value="{{$blog->name}}" placeholder="Name of New Blog *"required></p>
                 <p><textarea name="body" rows="3" placeholder="Your Documentation *"required> {{$blog->body}}</textarea></p>
 
