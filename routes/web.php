@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogController;
 use Illuminate\Support\Facades\Route;
 use PHPUnit\TextUI\XmlConfiguration\Group;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,3 +19,7 @@ use PHPUnit\TextUI\XmlConfiguration\Group;
 Route::resource('home','BlogController');
 Route::get('/blog/{blog}','BlogController@show');
 Route::resource('catagory','CatagoryController');
+Route::get('/','BlogController@index');
+Route::get('/logout','BlogController@logout');
+
+Auth::routes();

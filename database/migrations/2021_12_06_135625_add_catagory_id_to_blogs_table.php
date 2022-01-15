@@ -14,9 +14,8 @@ class AddCatagoryIdToBlogsTable extends Migration
     public function up()
     {
         Schema::table('blogs', function (Blueprint $table) {
-
-        $table->integer('catagory_id');
-        $table->foreign('catagory_id')->references('id')->on('catagories')->onDelete('cascade');
+            $table->integer('catagory_id')->unsigned(); //you cannot insert negative numbers
+            $table->foreign('catagory_id')->references('id')->on('catagories')->onDelete('cascade');
         });
     }
 

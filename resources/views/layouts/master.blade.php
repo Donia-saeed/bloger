@@ -29,16 +29,13 @@
 				<li><a href="#">About</a></li>
 				<li><a href="#">Shop</a></li>
 				<li><a href="#">Blog</a></li>
-				<li><a href="#">Elements</a></li>
-				<li><a href="#">Pages</a>
-				<ul class="sub-menu">
-					<li><a href="{{url('#')}}">Portfolio Item</a></li>
-					<li><a href="{{url('#')}}">Blog Article</a></li>
-					<li><a href="{{url('#')}}">Shop Item</a></li>
-					<li><a href="{{url('#')}}">Portfolio Category</a></li>
-				</ul>
-				</li>
-				<li><a href="{{url('#')}}">Contact</a></li>
+                @auth
+                <li><a href="{{url('/logout')}}">logout</a></li>
+                @else
+                <li><a href="{{url('/login')}}">login</a></li>
+				<li><a href="{{url('/register')}}">register</a></li>
+                @endauth
+
 			</ul>
 		</div>
 		</nav>

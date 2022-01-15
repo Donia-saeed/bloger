@@ -7,13 +7,24 @@ use App\Models\Catagory;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateBlogRequest;
 
+use Illuminate\Support\Facades\Auth;
+
 class BlogController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+     *
      */
+
+
+
+
+
+
+
+
     public function index()
     {
         $blogs = Blog::with('Catagory')->latest()->get(); //you must  use relationship//latest to show the new add
@@ -115,7 +126,7 @@ class BlogController extends Controller
 
             // remove old photo bu using it name in database and search by path and remove
 
-            $file_path = public_path('/img/'.$blog->photo);
+            $file_path = public_path('/img/' . $blog->photo);
             unlink($file_path);
 
             $blog->update([  // change the name in database
@@ -146,10 +157,15 @@ class BlogController extends Controller
         // dd($blog); //send  one $blog was choiced
         //remove from database
         Blog::destroy($blog);
-// remove from folder
-        $file_path = public_path('/img/'.$b->photo);
+        // remove from folder
+        $file_path = public_path('/img/' . $b->photo);
         unlink($file_path);
 
         return redirect('home');
     }
+
+    public function logout() {
+        Auth::logout();
+        return redirect('/');
+      }
 }
